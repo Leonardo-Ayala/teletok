@@ -6,4 +6,5 @@ import sw2.lab6.teletok.entity.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
+    public Post findByDescription(String desciption);
 }
