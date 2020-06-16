@@ -7,8 +7,8 @@
     <div th:if="${msg != null}" th:text="${msg}" class="alert alert-success mt-3" role="alert"></div>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 card-app">
         <div class="col mb-4">
-            <div class="card">
-                <img th:src="@{/img/huaraz.jpg}" class="card-img-top" style="height: 150px;">
+            <div class="card" th:each="post:${listapost}">
+                <img th:src="@{post.getMediaUrl()}" class="card-img-top" style="height: 150px;">
                 <a th:href="@{/post/1}">
                     <div class="card-img-overlay">
                         <h6 class="card-title text-white text-center mt-5" style="text-shadow: 2px 2px 4px #000000;">
