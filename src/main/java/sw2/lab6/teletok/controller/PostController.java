@@ -1,16 +1,23 @@
 package sw2.lab6.teletok.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import sw2.lab6.teletok.entity.Post;
 import sw2.lab6.teletok.entity.PostComment;
 import sw2.lab6.teletok.entity.User;
 import sw2.lab6.teletok.repository.PostRepository;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Optional;
 
-@Controller
+@RestController
+@CrossOrigin
 public class PostController {
 
     @Autowired
@@ -37,11 +44,35 @@ public class PostController {
         return "";
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping(value = "/post/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity obtenerPost(@PathVariable("id") String idPost) {
+
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        try {
+            int idP = Integer.parseInt(idPost);
+            Optional<Post> opt = postRepository.findById(idP);
+            if (opt.isPresent()) {
+                responseMap.put("estado", "ok");
+                responseMap.put("post", opt.get());
+                return new ResponseEntity(responseMap, HttpStatus.OK);
+            } else {
+                responseMap.put("estado", "error");
+                responseMap.put("msg", "no se encontró el post con id: " + idPost);
+                return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
+            }
+        } catch (NumberFormatException ex) {
+            responseMap.put("estado", "error");
+            responseMap.put("msg", "El ID del post debe ser un número");
+            return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /*@GetMapping("/post/{id}")
     public String viewPost(@RequestParam("id") int id,Model model) {
         model.addAttribute("post",postRepository.findById(id));
         return "post/view";
-    }
+    }*/
     @PostMapping("/post/comment")
     public String postComment(@RequestParam("comment") String comment, HttpSession session) {
         PostComment postComment = new PostComment();
