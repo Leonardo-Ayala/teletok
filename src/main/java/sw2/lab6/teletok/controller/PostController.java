@@ -24,6 +24,7 @@ public class PostController {
 
     @GetMapping("/post/new")
     public String newPost(){
+
         return "post/new";
     }
 
