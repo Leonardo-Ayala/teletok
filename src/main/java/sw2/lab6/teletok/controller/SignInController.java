@@ -20,7 +20,7 @@ public class SignInController {
     UserRepository userRepository;
 
     @PostMapping(value = "/ws/user/signIn",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity guardarProducto(@RequestBody User user){
+    public ResponseEntity SignIn(@RequestBody User user){
         HashMap<String, Object> hashMap = new HashMap<>();
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
