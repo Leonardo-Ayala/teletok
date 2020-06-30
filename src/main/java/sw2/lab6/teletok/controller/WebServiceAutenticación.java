@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 @RestController
 @CrossOrigin
-public class SignInController {
+public class WebServiceAutenticación {
 
 
     @Autowired

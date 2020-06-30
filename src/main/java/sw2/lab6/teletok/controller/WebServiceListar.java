@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-public class PostWebService {
+public class WebServiceListar {
 
     @Autowired
     PostRepository postRepository;

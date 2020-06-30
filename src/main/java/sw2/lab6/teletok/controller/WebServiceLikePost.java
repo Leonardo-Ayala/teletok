@@ -19,7 +19,7 @@ import sw2.lab6.teletok.repository.TokenRepository;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class LikePostController {
+public class WebServiceLikePost {
 
 
     @RestController

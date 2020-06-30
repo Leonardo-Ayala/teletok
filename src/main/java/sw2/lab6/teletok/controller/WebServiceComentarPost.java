@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-public class PostCommetController {
+public class WebServiceComentarPost {
     
     @Autowired
     TokenRepository tokenRepository;

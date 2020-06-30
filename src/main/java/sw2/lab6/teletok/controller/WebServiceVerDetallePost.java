@@ -22,7 +22,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/ws")
-public class PostWS {
+public class WebServiceVerDetallePost {
 
     @Autowired
     PostRepository postRepository;
