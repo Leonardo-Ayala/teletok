@@ -12,6 +12,8 @@ import sw2.lab6.teletok.entity.PostComment;
 import sw2.lab6.teletok.entity.Token;
 import sw2.lab6.teletok.entity.User;
 import sw2.lab6.teletok.repository.PostRepository;
+import sw2.lab6.teletok.repository.TokenRepository;
+import sw2.lab6.teletok.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -24,6 +26,12 @@ public class PostWS {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    TokenRepository tokenRepository;
 
     @GetMapping(value = {"", "/"})
     public String listPost(Model model){
@@ -48,11 +56,12 @@ public class PostWS {
     }
 
     @GetMapping(value = "/post/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity obtenerPost(@PathVariable("id") String idPost, @RequestParam("token") Token token) {
+    public ResponseEntity obtenerPost(@PathVariable("id") String idPost, @RequestParam("tokenCodigo") String tokenCodigo) {
 
         HashMap<String, Object> responseMap = new HashMap<>();
-        if (token != null) {
-
+        if (tokenCodigo != null) {
+            Token  token = tokenRepository.findByCode(tokenCodigo);
+            User u = token.getUserid();
             try {
                 int idP = Integer.parseInt(idPost);
                 Optional<Post> opt = postRepository.findById(idP);
