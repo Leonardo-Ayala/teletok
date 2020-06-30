@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sw2.lab6.teletok.entity.Post;
 import sw2.lab6.teletok.entity.PostComment;
+import sw2.lab6.teletok.entity.Token;
 import sw2.lab6.teletok.entity.User;
 import sw2.lab6.teletok.repository.PostRepository;
 
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-public class PostController {
+public class PostWS {
 
     @Autowired
     PostRepository postRepository;
@@ -46,7 +47,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/post/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity obtenerPost(@PathVariable("id") String idPost) {
+    public ResponseEntity obtenerPost(@PathVariable("id") String idPost, @RequestParam("token") Token token) {
 
         HashMap<String, Object> responseMap = new HashMap<>();
 
@@ -59,12 +60,12 @@ public class PostController {
                 return new ResponseEntity(responseMap, HttpStatus.OK);
             } else {
                 responseMap.put("estado", "error");
-                responseMap.put("msg", "no se encontró el post con id: " + idPost);
+                responseMap.put("msg", "no se encontró el post con id: " + idPost);//////cambiar con logica de token
                 return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
             }
         } catch (NumberFormatException ex) {
             responseMap.put("estado", "error");
-            responseMap.put("msg", "El ID del post debe ser un número");
+            responseMap.put("msg", "El ID del post debe ser un número");//////cambiar con logica de token
             return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
         }
     }
