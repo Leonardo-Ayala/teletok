@@ -2,6 +2,8 @@ package sw2.lab6.teletok.entity;
 
 import org.aspectj.bridge.IMessage;
 
+import javax.persistence.Entity;
+
 public class PostClassTemp {
     private String token;
     private int postId;
