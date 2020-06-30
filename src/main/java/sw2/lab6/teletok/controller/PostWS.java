@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
+@RequestMapping(value = "/ws")
 public class PostWS {
 
     @Autowired
@@ -50,24 +51,29 @@ public class PostWS {
     public ResponseEntity obtenerPost(@PathVariable("id") String idPost, @RequestParam("token") Token token) {
 
         HashMap<String, Object> responseMap = new HashMap<>();
+        if (token != null) {
 
-        try {
-            int idP = Integer.parseInt(idPost);
-            Optional<Post> opt = postRepository.findById(idP);
-            if (opt.isPresent()) {
-                responseMap.put("estado", "ok");
-                responseMap.put("post", opt.get());
-                return new ResponseEntity(responseMap, HttpStatus.OK);
-            } else {
+            try {
+                int idP = Integer.parseInt(idPost);
+                Optional<Post> opt = postRepository.findById(idP);
+                if (opt.isPresent()) {
+                    responseMap.put("estado", "ok");
+                    responseMap.put("post", opt.get());
+                    return new ResponseEntity(responseMap, HttpStatus.OK);
+                } else {
+                    responseMap.put("estado", "error");
+                    responseMap.put("msg", "no se encontró el post con id: " + idPost);//////cambiar con logica de token
+                    return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
                 responseMap.put("estado", "error");
-                responseMap.put("msg", "no se encontró el post con id: " + idPost);//////cambiar con logica de token
+                responseMap.put("msg", "El ID del post debe ser un número");//////cambiar con logica de token
                 return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
             }
-        } catch (NumberFormatException ex) {
-            responseMap.put("estado", "error");
-            responseMap.put("msg", "El ID del post debe ser un número");//////cambiar con logica de token
+        } else {
             return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
         }
+
     }
 
     /*@GetMapping("/post/{id}")
