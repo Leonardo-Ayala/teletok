@@ -25,7 +25,7 @@ public class PostCommetController {
     @Autowired
     PostCommentRepository postCommentRepository;
 
-    @PostMapping(value = "/product",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/ws/post/comment",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity postCommet(@RequestBody PostClassTemp postClassTemp){
         HashMap<String, Object> hashMap = new HashMap<>();
         HttpStatus status = HttpStatus.BAD_REQUEST;
