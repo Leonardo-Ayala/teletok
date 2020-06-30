@@ -12,6 +12,8 @@ import sw2.lab6.teletok.entity.PostComment;
 import sw2.lab6.teletok.entity.Token;
 import sw2.lab6.teletok.entity.User;
 import sw2.lab6.teletok.repository.PostRepository;
+import sw2.lab6.teletok.repository.TokenRepository;
+import sw2.lab6.teletok.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -19,10 +21,17 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
+@RequestMapping(value = "/ws")
 public class PostWS {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    TokenRepository tokenRepository;
 
     @GetMapping(value = {"", "/"})
     public String listPost(Model model){
@@ -47,27 +56,33 @@ public class PostWS {
     }
 
     @GetMapping(value = "/post/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity obtenerPost(@PathVariable("id") String idPost, @RequestParam("token") Token token) {
+    public ResponseEntity obtenerPost(@PathVariable("id") String idPost, @RequestParam("tokenCodigo") String tokenCodigo) {
 
         HashMap<String, Object> responseMap = new HashMap<>();
-
-        try {
-            int idP = Integer.parseInt(idPost);
-            Optional<Post> opt = postRepository.findById(idP);
-            if (opt.isPresent()) {
-                responseMap.put("estado", "ok");
-                responseMap.put("post", opt.get());
-                return new ResponseEntity(responseMap, HttpStatus.OK);
-            } else {
+        if (tokenCodigo != null) {
+            Token  token = tokenRepository.findByCode(tokenCodigo);
+            User u = token.getUserid();
+            try {
+                int idP = Integer.parseInt(idPost);
+                Optional<Post> opt = postRepository.findById(idP);
+                if (opt.isPresent()) {
+                    responseMap.put("estado", "ok");
+                    responseMap.put("post", opt.get());
+                    return new ResponseEntity(responseMap, HttpStatus.OK);
+                } else {
+                    responseMap.put("estado", "error");
+                    responseMap.put("msg", "no se encontró el post con id: " + idPost);//////cambiar con logica de token
+                    return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
                 responseMap.put("estado", "error");
-                responseMap.put("msg", "no se encontró el post con id: " + idPost);//////cambiar con logica de token
+                responseMap.put("msg", "El ID del post debe ser un número");//////cambiar con logica de token
                 return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
             }
-        } catch (NumberFormatException ex) {
-            responseMap.put("estado", "error");
-            responseMap.put("msg", "El ID del post debe ser un número");//////cambiar con logica de token
+        } else {
             return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
         }
+
     }
 
     /*@GetMapping("/post/{id}")
