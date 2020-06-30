@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import sw2.lab6.teletok.entity.PostClassTemp;
 import sw2.lab6.teletok.entity.PostComment;
+import sw2.lab6.teletok.entity.PostLike;
 import sw2.lab6.teletok.entity.Token;
 import sw2.lab6.teletok.repository.PostCommentRepository;
+import sw2.lab6.teletok.repository.PostLikeRepository;
 import sw2.lab6.teletok.repository.TokenRepository;
 
 import java.util.HashMap;
@@ -30,19 +32,23 @@ public class LikePostController {
         @Autowired
         PostCommentRepository postCommentRepository;
 
-        @PostMapping(value = "/product",produces = MediaType.APPLICATION_JSON_VALUE)
+        @Autowired
+        PostLikeRepository postLikeRepository;
+
+        @PostMapping(value = "/ws/post/like",produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity postCommet(@RequestBody PostClassTemp postClassTemp){
             HashMap<String, Object> hashMap = new HashMap<>();
             HttpStatus status = HttpStatus.BAD_REQUEST;
             Token tokentemp = tokenRepository.findByCode(postClassTemp.getToken());
             Optional<PostComment> optpost = postCommentRepository.findById(postClassTemp.getPostId());
+
             if(tokentemp.getUserid() != null && optpost.isPresent()){
-                PostComment comentario = new PostComment();
-                comentario.setMessage(postClassTemp.getMessage());
-                comentario.setUser(tokentemp.getUserid());
-                postCommentRepository.save(comentario);
-                hashMap.put("commentId",comentario.getId());
-                hashMap.put("status","COMMENT_CREATED");
+                PostLike postLike = new PostLike();
+                postLike.setUser(tokentemp.getUserid());
+                postLike.getPost().setId(postClassTemp.getPostId());
+                postLikeRepository.save(postLike);
+                hashMap.put("likeId",postLike.getId());
+                hashMap.put("status","LIKE_CREATED");
                 status = HttpStatus.OK;
             }else if (tokentemp.getUserid() == null){
                 hashMap.put("error", "TOKEN_INVALID");
