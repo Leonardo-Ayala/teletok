@@ -28,11 +28,14 @@ public class WebServiceListar {
     @GetMapping(value = "/ws/post/list",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity listarPost(@RequestParam(value = "query") String query) {
         List<Post> listaPost = null;
-        if(query != null){
+        if(query == null){
             listaPost = postRepository.findAll();
             return new ResponseEntity(listaPost, HttpStatus.OK);
+        }else{
+            listaPost = postRepository.buscar(query);
+            return new ResponseEntity(listaPost, HttpStatus.OK);
         }
-        return new ResponseEntity(listaPost, HttpStatus.BAD_REQUEST);
+
     }
 
 
